@@ -5,13 +5,14 @@ import time
 import click
 from datetime import datetime
 from pathlib import Path
+from typing import Optional, Dict, Any
 
 # --- CONFIGURATION ---
 YEAR = "2026"
 PLAYER_CACHE_FILE = "nfl_players.json"
 CACHE_EXPIRY = 86400  # 24 hours
 
-def fetch_data(url):
+def fetch_data(url: str) -> Optional[Dict[str, Any] | list[Any]]:
     try:
         response = requests.get(url)
         return response.json() if response.status_code == 200 else None
@@ -19,9 +20,8 @@ def fetch_data(url):
         click.secho(f"Network Error: {e}", fg="red")
         return None
 
-def get_players():
-    """
-    Integrated from sleeper_fetch_players logic:
+def get_players() -> Dict[str, Any]:
+    """Integrated from sleeper_fetch_players logic:
     Checks if local player data exists; if not or if old, fetches from Sleeper.
     """
     if os.path.exists(PLAYER_CACHE_FILE):
@@ -29,36 +29,36 @@ def get_players():
         file_age = time.time() - os.path.getmtime(PLAYER_CACHE_FILE)
         if file_age < CACHE_EXPIRY:
             with open(PLAYER_CACHE_FILE, 'r') as f:
-                return json.load(f)
+                return dict(json.load(f))
 
-    print("Fetching fresh player data from Sleeper (this may take a moment)...")
+    click.echo("Fetching fresh player data from Sleeper (this may take a moment)...")
     data = fetch_data("https://api.sleeper.app/v1/players/nfl")
-    if data:
+    if data and isinstance(data, dict):
         with open(PLAYER_CACHE_FILE, 'w') as f:
             json.dump(data, f)
         return data
     return {}
 
-def get_auto_draft_id(league_id):
+def get_auto_draft_id(league_id: str) -> Optional[str]:
     """Fetches the most recent draft ID for a given league."""
     drafts = fetch_data(f"https://api.sleeper.app/v1/league/{league_id}/drafts")
-    if drafts and len(drafts) > 0:
-        return drafts[0]['draft_id']
+    if isinstance(drafts, list) and len(drafts) > 0:
+        draft_id = drafts[0].get('draft_id')
+        return draft_id if isinstance(draft_id, str) else None
     return None
 
-def get_league_info(league_id):
+def get_league_info(league_id: str) -> Optional[Dict[str, Any]]:
     """Fetches general league settings and name."""
-    return fetch_data(f"https://api.sleeper.app/v1/league/{league_id}")
+    data = fetch_data(f"https://api.sleeper.app/v1/league/{league_id}")
+    return data if isinstance(data, dict) else None
 
 @click.command()
 @click.argument('league_id', metavar='<League ID>')
 @click.argument('draft_id', required=False, metavar='[Draft ID]')
 @click.option('--name', '-n', default="Sleeper League", help="Custom name for the league.")
 @click.option('--teams', '-t', default=12, type=int, help="Number of teams (picks per round).")
-@click.option('--logfile', '-l', default="kicker_scan.log", help="File to append logs to.")
-def run_kicker_scan(league_id, draft_id, name, teams, logfile):
-    """
-    Sleeper Kicker-to-Rookie Pick Converter.
+def run_kicker_scan(league_id: str, draft_id: Optional[str], name: str, teams: int) -> None:
+    """Sleeper Kicker-to-Rookie Pick Converter.
 
     <League ID>: The numeric ID found in your Sleeper league URL.
 
@@ -67,7 +67,7 @@ def run_kicker_scan(league_id, draft_id, name, teams, logfile):
 
     league_data = get_league_info(league_id)
     if not league_data:
-        click.secho("❌ Error: Could not find league with that ID.", fg="red")
+        click.secho("Error: Could not find league with that ID.", fg="red")
         return
 
     # Use API name if no flag provided
@@ -94,10 +94,10 @@ def run_kicker_scan(league_id, draft_id, name, teams, logfile):
     # 3. Process Logic
     user_map = {u['user_id']: u['display_name'] for u in users_data}
     k_picks = [p for p in draft_picks if players.get(p['player_id'], {}).get('position') == 'K']
-    
+
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     total_allowed = 48
-    
+
     # 4. Generate Output
     output = [
         f"**2026 Rookie Pick Tracker: {final_name}**",
@@ -106,16 +106,17 @@ def run_kicker_scan(league_id, draft_id, name, teams, logfile):
     ]
 
     for i, pick in enumerate(k_picks):
-        if i >= total_allowed: break
-        
+        if i >= total_allowed:
+            break
+
         round_num = (i // teams) + 1
         pick_num = (i % teams) + 1
         label = f"{round_num}.{str(pick_num).zfill(2)}"
-        
+
         username = user_map.get(pick['picked_by'], 'Unknown')
         p_meta = pick.get('metadata', {})
         player_name = f"{p_meta.get('first_name', '')} {p_meta.get('last_name', '')}"
-        
+
         output.append(f"Pick {label} @{username} (via {player_name})")
 
         # Round Completion Logic

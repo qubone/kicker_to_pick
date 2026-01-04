@@ -6,5 +6,31 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "click>=8.3.1",
+    "mypy>=1.19.1",
     "requests>=2.32.5",
+    "ruff>=0.14.10",
+    "types-requests>=2.32.4.20250913",
 ]
+
+[tool.ruff]
+line-length = 119
+
+[tool.ruff.lint]
+select = [
+    "F",  # Pyflakes
+    "E",  # PEP 8
+    "W",  # PEP 8 warnings
+    "C",  # Complexity
+    "N",  # Naming conventions
+    "T",  # Type hints
+]
+ignore = [
+    "N815",  # Variable in class scope should not be mixedCase
+]
+
+[tool.mypy]
+strict=true
+#TODO: Investigate explicit_package_bases = true
+#TODO: Investigate packages = ["qsleeperfantasybot", "test"]
+ignore_missing_imports = true
+disallow_untyped_decorators = false

@@ -1,0 +1,12 @@
+.venv/
+
+logs/
+scan-leagues.sh
+nfl_players.json
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+.vscode/
+.env    
