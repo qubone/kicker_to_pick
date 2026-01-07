@@ -1,7 +1,7 @@
 [project]
 name = "kicker-to-pick"
 version = "0.1.0"
-description = "Add your description here"
+description = "A tool to convert Sleeper fantasy football kickers to draft picks."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
@@ -23,6 +23,10 @@ select = [
     "C",  # Complexity
     "N",  # Naming conventions
     "T",  # Type hints
+    "PL", # Pylint settings
+    "I",  # Isort
+    "RUF", # Ruff-specific rules
+    "D", # Docstrings
 ]
 ignore = [
     "N815",  # Variable in class scope should not be mixedCase
@@ -30,7 +34,5 @@ ignore = [
 
 [tool.mypy]
 strict=true
-#TODO: Investigate explicit_package_bases = true
-#TODO: Investigate packages = ["qsleeperfantasybot", "test"]
 ignore_missing_imports = true
 disallow_untyped_decorators = false
