@@ -139,6 +139,7 @@ def run_kicker_scan(league_id: str, draft_id: Optional[str], name: str, teams: i
 
     # 2. Append to Log File
     kicker_log_file = Path("logs") / f"{final_name}_log.txt"
+    kicker_log_file.parent.mkdir(exist_ok=True)
     with open(kicker_log_file, "a", encoding="utf-8") as f:
         f.write(final_text + "\n")
 
