@@ -12,7 +12,6 @@ PLAYER_CACHE_FILE = "nfl_players.json"
 CACHE_EXPIRY = 86400  # 24 hours
 TOTAL_NUM_PICKS = 48
 LOW_REMAINING_THRESHOLD = 5
-
 HTTP_OK = 200
 
 
@@ -168,7 +167,7 @@ def run_kicker_scan(league_id: str, draft_id: Optional[str], name: str, teams: i
 
     user_map = {u["user_id"]: u["display_name"] for u in users_data} if isinstance(users_data, list) else {}
     k_picks = (
-        [p for p in draft_picks if players.get(p["player_id"], {}).get("position") == "K"]
+        [p for p in draft_picks if players.get(p["player_id"], {}).get("position") in ("K", "P")]
         if isinstance(draft_picks, list)
         else []
     )

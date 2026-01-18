@@ -100,8 +100,7 @@ wheels = [
 
 [[package]]
 name = "kicker-to-pick"
-version = "0.1.0"
-source = { virtual = "." }
+source = { editable = "." }
 dependencies = [
     { name = "click" },
     { name = "mypy" },

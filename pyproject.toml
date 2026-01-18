@@ -1,6 +1,10 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "kicker-to-pick"
-version = "0.1.0"
+dynamic = ["version"]
 description = "A tool to convert Sleeper fantasy football kickers to draft picks."
 readme = "README.md"
 requires-python = ">=3.12"
@@ -11,6 +15,9 @@ dependencies = [
     "ruff>=0.14.10",
     "types-requests>=2.32.4.20250913",
 ]
+
+[project.scripts]
+kicker-to-pick = "kicker_to_pick.kicker_to_pick:run_kicker_scan"
 
 [tool.ruff]
 line-length = 119
@@ -36,3 +43,12 @@ ignore = [
 strict=true
 ignore_missing_imports = true
 disallow_untyped_decorators = false
+
+[tool.setuptools.dynamic]
+version = { attr = "kicker_to_pick._version.__version__" }
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
