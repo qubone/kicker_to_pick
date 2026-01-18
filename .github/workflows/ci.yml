@@ -14,7 +14,7 @@ on:
 
 jobs:
   ci:
-    uses: qubone/q-python-ci-tools/.github/workflows/python-ci.yml@main
+    uses: qubone/q-python-ci-actions/.github/workflows/python-ci.yml@main
     secrets:
       # Provide the token so the release step can push tags
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
