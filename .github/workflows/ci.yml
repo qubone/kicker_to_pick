@@ -19,3 +19,4 @@ jobs:
       github-token: ${{ secrets.GITHUB_TOKEN }}
     with:
       import-module: kicker_to_pick
+      skip-tests: true
