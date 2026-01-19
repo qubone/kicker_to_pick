@@ -18,4 +18,4 @@ jobs:
     secrets:
       github-token: ${{ secrets.GITHUB_TOKEN }}
     with:
-    import-module: kicker_to_pick
+      import-module: kicker_to_pick
