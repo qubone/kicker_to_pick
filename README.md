@@ -7,6 +7,8 @@ Installation guide:
 https://docs.astral.sh/uv/getting-started/installation/
 
 
+test
+
 **Usage**
 
 This script can be run manually using CLI. 
