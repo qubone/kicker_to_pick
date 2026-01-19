@@ -48,9 +48,6 @@ select = [
     "RUF", # Ruff-specific rules
     "D", # Docstrings
 ]
-ignore = [
-    "N815",  # Variable in class scope should not be mixedCase
-]
 
 [tool.mypy]
 strict=true
