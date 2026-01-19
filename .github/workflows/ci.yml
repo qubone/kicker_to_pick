@@ -1,6 +1,6 @@
 name: CI
 
-description: Continuous Integration Workflow for QSleeperFantasyBot
+description: Continuous Integration Workflow for kicker_to_pick module
 
 permissions:
   contents: write
@@ -16,5 +16,6 @@ jobs:
   ci:
     uses: qubone/q-python-ci-actions/.github/workflows/python-ci.yml@main
     secrets:
-      # Provide the token so the release step can push tags
       github-token: ${{ secrets.GITHUB_TOKEN }}
+    with:
+    import-module: kicker_to_pick
