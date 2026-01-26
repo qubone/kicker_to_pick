@@ -11,3 +11,4 @@ __pycache__/
 .vscode/
 .env    
 nfl_players.json
+*.egg-info/
