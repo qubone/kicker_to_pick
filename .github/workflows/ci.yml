@@ -18,6 +18,6 @@ jobs:
     secrets:
       github-token: ${{ secrets.GITHUB_TOKEN }}
     with:
+      python-version: 3.12
       import-module: kicker_to_pick
-      skip-tests: true
-      skip-coverage: true
+      coverage-threshold: 0
