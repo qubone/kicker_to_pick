@@ -8,3 +8,4 @@ __version__ = _base_version + os.getenv("VERSION_SUFFIX", "")
 from .kicker_to_pick import run_kicker_scan
 
 __all__ = ["__version__", "run_kicker_scan"]
+
